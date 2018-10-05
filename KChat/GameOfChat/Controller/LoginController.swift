@@ -67,13 +67,21 @@ class LoginController: UIViewController {
         return tf
     }()
     
-    let profileImageView: UIImageView = {
+    lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "gameofthrones_splash")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+//        imageView.isUserInteractionEnabled = true
+//        let tapGesture = UIGestureRecognizer(target: self, action: #selector(handleSelectedProfileImageView))
+//        tapGesture.
+//        imageView.addGestureRecognizer(tapGesture)
+        
+
         return imageView
     }()
+    
+    
     
     let loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login","Register"])
@@ -115,7 +123,9 @@ class LoginController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        profileImageView.isUserInteractionEnabled = true
+        let tapImageViewGesture = UITapGestureRecognizer(target: self, action: #selector(handleSelectedProfileImageView))
+        profileImageView.addGestureRecognizer(tapImageViewGesture)
         view.backgroundColor = UIColor(r: 61, g: 91, b: 151)
   
         view.addSubview(inputContainerView)
@@ -126,6 +136,7 @@ class LoginController: UIViewController {
         setupLoginRegisterButton()
         setupProfileImageView()
         setupLoginRegisterSegmentControl()
+        
     }
     
     func setupLoginRegisterSegmentControl(){
@@ -164,36 +175,7 @@ class LoginController: UIViewController {
     
     
     // MARK: - handle register
-    private func handleRegister(){
-        print("123")
-        guard let email = emailTextField.text, let password = passwordTextField.text,let name = nameTextField.text else{
-            print("form invalid")
-            return
-        }
     
-        Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
-            if let error = error{
-                print("Something wrong \(error)")
-                return
-            }
-            guard let user = authResult?.user else{
-                return
-            }
-            
-            let ref = Database.database().reference()
-            let userRef = ref.child("users").child(user.uid)
-            let values = ["names": name, "email": email]
-            userRef.updateChildValues(values, withCompletionBlock: { (err, ref) in
-                if let err = err{
-                    print(err)
-                    return
-                }
-                self.dismiss(animated: true, completion: nil)
-                print("Saved successfully")
-            })
-            
-        }
-    }
     
     func setupProfileImageView(){
         NSLayoutConstraint.activate([profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -264,11 +246,11 @@ class LoginController: UIViewController {
     }
     
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        nameTextField.resignFirstResponder()
-        passwordTextField.resignFirstResponder()
-        emailTextField.resignFirstResponder()
-    }
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        nameTextField.resignFirstResponder()
+//        passwordTextField.resignFirstResponder()
+//        emailTextField.resignFirstResponder()
+//    }
 
     
 
