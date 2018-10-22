@@ -51,25 +51,20 @@ class NewMessageViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 //        let cell = UITableViewCell(style: .subtitle, reuseIdentifier:
 //        cellId)
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         let user = users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
 //        cell.imageView?.image = UIImage(named: "nedstark")
 //        cell.imageView?.contentMode = .scaleAspectFill
         if let profileImageUrl = user.profileImageURL{
-            let url = URL(string: profileImageUrl)
-            URLSession.shared.dataTask(with: url!) { (data, response, error) in
-                if let error = error{
-                    print(error)
-                    return
-                }
-                DispatchQueue.main.async {
-//                    cell.imageView?.image = UIImage(data: data!)
-                }
-            }
+            cell.profileImageView.loadImageWithCacheWithUrlString(urlString: profileImageUrl)
         }
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 56
     }
 
 
@@ -78,8 +73,10 @@ class NewMessageViewController: UITableViewController {
 class UserCell: UITableViewCell{
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "nedstark")
+//        imageView.image = UIImage(named: "nedstark")
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 20
+        imageView.layer.masksToBounds = true
         return imageView
     }()
     
@@ -99,7 +96,7 @@ class UserCell: UITableViewCell{
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        textLabel?.frame = CGRect(x: 56, y: (textLabel?.frame.origin.y)!, width: (textLabel?.frame.width)!, height: (textLabel?.frame.height)!)
-        detailTextLabel?.frame = CGRect(x: 56, y: (detailTextLabel?.frame.origin.y)!, width: (detailTextLabel?.frame.width)!, height: (detailTextLabel?.frame.height)!)
+        textLabel?.frame = CGRect(x: 56, y: (textLabel?.frame.origin.y)! - 2, width: (textLabel?.frame.width)!, height: (textLabel?.frame.height)!)
+        detailTextLabel?.frame = CGRect(x: 56, y: (detailTextLabel?.frame.origin.y)! + 2, width: (detailTextLabel?.frame.width)!, height: (detailTextLabel?.frame.height)!)
     }
 }
