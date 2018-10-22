@@ -49,14 +49,12 @@ class NewMessageViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = UITableViewCell(style: .subtitle, reuseIdentifier:
-//        cellId)
+
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         let user = users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
-//        cell.imageView?.image = UIImage(named: "nedstark")
-//        cell.imageView?.contentMode = .scaleAspectFill
+
         if let profileImageUrl = user.profileImageURL{
             cell.profileImageView.loadImageWithCacheWithUrlString(urlString: profileImageUrl)
         }
@@ -64,7 +62,7 @@ class NewMessageViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 56
+        return 72
     }
 
 
@@ -77,6 +75,7 @@ class UserCell: UITableViewCell{
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 20
         imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-let imageCache = NSCache<AnyObject, AnyObject>()
+let imageCache = NSCache<AnyObject, UIImage>()
 
 
 extension UIImageView{
@@ -34,6 +34,6 @@ extension UIImageView{
                 }
                 
             }
-        }
+        }.resume()
     }
 }
