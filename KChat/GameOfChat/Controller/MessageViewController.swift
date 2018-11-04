@@ -43,13 +43,40 @@ class MessageViewController: UITableViewController {
         Database.database().reference().child("users").child(uid).observe(.value, with: { (snapShot) in
             
             if let dic = snapShot.value as? [String: Any]{
-                self.navigationItem.title = dic["names"] as? String
+//                self.navigationItem.title = dic["names"] as? String
+                let user = User(dictionary: dic)
+                self.setupNavBarWithUser(user: user)
+                
             }
     
             print(snapShot)
         }, withCancel: nil)
     }
     
+    func setupNavBarWithUser(user:User){
+        self.navigationItem.title = user.name
+        let titleView = UIView()
+        titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
+        titleView.backgroundColor = UIColor.red
+        titleView.translatesAutoresizingMaskIntoConstraints = true
+        
+        self.navigationItem.titleView = titleView
+        let profileImageView = UIImageView()
+        
+        if let url = user.profileImageURL{
+            profileImageView.loadImageWithCacheWithUrlString(urlString: url)
+        }
+        profileImageView.contentMode = .scaleToFill
+        profileImageView.layer.cornerRadius = 20
+        profileImageView.layer.masksToBounds = true
+        profileImageView.translatesAutoresizingMaskIntoConstraints = true
+        titleView.addSubview(profileImageView)
+        NSLayoutConstraint.activate([profileImageView.leftAnchor.constraint(equalTo: titleView.leftAnchor),
+                                     profileImageView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
+                                     profileImageView.widthAnchor.constraint(equalToConstant: 40),
+                                     profileImageView.heightAnchor.constraint(equalToConstant: 40)])
+        
+    }
     @objc private func handleNewMessage(){
         let newMessageController = NewMessageViewController()
         let navController = UINavigationController(rootViewController: newMessageController)

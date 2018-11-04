@@ -28,8 +28,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             }
             
             let imageName = UUID().uuidString
-            let storegeRef = Storage.storage().reference().child("\(imageName).png")
-            if let uploadData = self.profileImageView.image?.pngData(){
+            let storegeRef = Storage.storage().reference().child("\(imageName).jpg")
+            
+            
+            if let profileImage = self.profileImageView.image,let uploadData = profileImage.jpegData(compressionQuality: 0.1){
                 storegeRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
                     guard let metadata = metadata else{
                         return
@@ -54,28 +56,9 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                         self.registerUserIntoDatabase(uid: uid, values: values)
                         
                     })
-//                    metadata.url
-//                    let values = ["names": name, "email": email, "profileImageUrl": metadata]
-//                    self.registerUserIntoDatabase(uid: uid, values: <#T##[String : Any]#>)
                     print(metadata)
                 })
             }
-            
-            
-            
-            
-//            let ref = Database.database().reference()
-//            let userRef = ref.child("users").child(user.uid)
-//            let values = ["names": name, "email": email]
-//            userRef.updateChildValues(values, withCompletionBlock: { (err, ref) in
-//                if let err = err{
-//                    print(err)
-//                    return
-//                }
-//                self.dismiss(animated: true, completion: nil)
-//                print("Saved successfully")
-//            })
-            
         }
     }
     
